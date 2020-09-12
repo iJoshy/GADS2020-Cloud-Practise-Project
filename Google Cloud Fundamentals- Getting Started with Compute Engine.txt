@@ -1,0 +1,99 @@
+Google Cloud Fundamentals: Getting Started with Compute Engine
+===============================================================
+
+
+===================================================
+Task 1: Create two virtual machines
+===================================================
+
+Step 1. Create my-vm-1
+
+gcloud compute instances create "my-vm-1" \
+--machine-type "n1-standard-1" \
+--image-project "debian-cloud" \
+--image "debian-9-stretch-v20190213" \
+--subnet "default" --tags http --zone us-central1-a
+
+Step 2. Create a firewall rule to allow http traffic to the VM
+
+gcloud compute firewall-rules create allow-http --direction=INGRESS --action=ALLOW --rules=tcp:80 --target-tags=http
+
+
+Step 3. Create my-vm-2
+
+gcloud compute instances create "my-vm-2" \
+--machine-type "n1-standard-1" \
+--image-project "debian-cloud" \
+--image "debian-9-stretch-v20190213" \
+--subnet "default" --tags http --zone us-central1-b
+
+
+===================================================
+Task 2: Connect between the two VM's
+===================================================
+
+Step 4. Get the private IPs of the two Vm's
+
+gcloud compute instances list
+
+
+Step 5. Connect to my-vm-2 Vm. Accept any requests
+
+gcloud compute ssh my-vm-2
+
+
+Step 6. Ping my-vm-1
+
+ping my-vm-1
+
+
+Step 7. Connect via ssh from my-vm-2 to my-vm-1. Enter yes to confirm host connection with unknown authenticity
+
+ssh my-vm-1
+
+
+Step 8. From my-vm-1, install Nginx web server
+
+sudo apt-get install nginx-light -y
+
+
+Step 9. Add a custom message to the home page of the web server
+
+sudo nano /var/www/html/index.nginx-debian.html
+
+
+Step 10. Add text to the file and save
+
+Hi from Joshua Balogun
+
+
+Step 11. Confirm that the web server is serving new page, in my-vm-1 execute
+
+curl http://localhost/
+
+( The response will be the HTML source of the web server's home page, including line of custom text. )
+
+
+Step 12. Exit from my-vm-1
+
+exit
+
+
+Step 13. To confirm that my-vm-2 can reach the web server on my-vm-1, in my-vm-2 execute
+
+curl http://my-vm-1/
+
+( The response will again be the HTML source of the web server's home page, including line of custom text.)
+
+
+Step 14. Copy the External IP address for my-vm-1 and paste it into the address bar of a new browser tab. You will see web server's home page, including the custom text.
+
+
+
+
+
+
+
+
+
+
